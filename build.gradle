@@ -1,22 +1,53 @@
 plugins {
-    id 'java'
+    id 'java' // Добавляет поддержку для Java.
+    id 'org.springframework.boot' version '2.6.2' // Плагин Spring Boot, который упрощает создание и управление Spring приложениями.
+    id "io.spring.dependency-management" version "1.1.5" // Позволяет управлять зависимостями, обеспечивая совместимость и версионность.
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10" // Плагин для поддержки QueryDSL в Gradle, который позволяет генерировать классы для построения запросов к базе данных.
+    id "io.freefair.lombok" version "8.6" // Плагин для интеграции библиотеки Lombok, которая позволяет избежать повторяющегося кода, связанного с геттерами, сеттерами и другими часто используемыми шаблонами.
 }
+apply from: 'version.gradle'
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group 'org.example' // - group: Указывает организацию или компанию (например, org.example).
+version '1.0-SNAPSHOT' // - version: Указывает версию проекта.
 
 repositories {
-    mavenCentral()
+    mavenCentral() // - mavenCentral(): Указывает, что зависимости будут загружаться из центрального репозитория Maven.
+}
+
+configurations {
+    querydsl.extendsFrom annotationProcessor, implementation, compileOnly, runtimeOnly // - querydsl.extendsFrom ...: Конфигурация для QueryDSL, которая определяет, что он расширяет другие конфигурации для хранения зависимостей.
 }
 
 dependencies {
-    implementation 'org.springframework:spring-core:5.3.13'
-    implementation 'org.springframework:spring-context:5.3.13'
-    implementation 'jakarta.annotation:jakarta.annotation-api:1.3.5'
-    implementation 'javax.inject:javax.inject:1'
+    implementation 'org.springframework.boot:spring-boot-starter' // Основная зависимость Spring Boot.
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.6.2' // Поддержка JPA в Spring.
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-validation' // валидация
+    implementation "org.springdoc:springdoc-openapi-ui:${versions.springdoc}" // swagger
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30' // Указываем Lombok
+    annotationProcessor 'com.querydsl:querydsl-apt' // Зависимость для аннотированных процессоров, которая генерирует классы QueryDSL.
+
+    implementation 'org.postgresql:postgresql' // Драйвер для работы с PostgreSQL.
+    implementation 'org.springframework.data:spring-data-envers' // Библиотека для отслеживания изменений данных.
+    implementation 'com.querydsl:querydsl-jpa' // Библиотека для работы с QueryDSL.
+    implementation 'org.liquibase:liquibase-core'
+
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test' // Зависимость для тестирования.
+    testImplementation "org.testcontainers:postgresql:${versions.testcontainers}"
+}
+
+querydsl {
+    jpa = true // Указывает конфигурацию JPA для QueryDSL.
+    library = "com.querydsl:querydsl-apt:${versions.querydsl}" // Задает библиотеку для аннотационного процессора.
+    querydslSourcesDir = "$buildDir/generated/sources/annotationProcessor/java/main" // Указывает директорию, куда будут генерироваться исходные файлы QueryDSL.
+}
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
 }
 
 test {
@@ -24,5 +55,11 @@ test {
 }
 
 wrapper {
-    gradleVersion '7.3'
+    gradleVersion '8.5'
+}
+
+allprojects {
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
 }

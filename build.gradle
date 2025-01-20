@@ -19,13 +19,18 @@ configurations {
 }
 
 dependencies {
+    implementation project(':common-loging-starter')
     implementation 'org.springframework.boot:spring-boot-starter' // Основная зависимость Spring Boot.
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.6.2' // Поддержка JPA в Spring.
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation' // валидация
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5' // Доступ к данным аутентификации и авторизации
     implementation "org.springdoc:springdoc-openapi-ui:${versions.springdoc}" // swagger
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+    implementation 'org.springframework.security:spring-security-oauth2-client'
+    implementation 'org.springframework.security:spring-security-oauth2-jose'
 
     annotationProcessor 'org.projectlombok:lombok:1.18.30' // Указываем Lombok
     annotationProcessor 'com.querydsl:querydsl-apt' // Зависимость для аннотированных процессоров, которая генерирует классы QueryDSL.
@@ -37,6 +42,7 @@ dependencies {
 
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test' // Зависимость для тестирования.
+    testImplementation 'org.springframework.security:spring-security-test' // тест аутентифицириваного пользователя
     testImplementation "org.testcontainers:postgresql:${versions.testcontainers}"
 }
 

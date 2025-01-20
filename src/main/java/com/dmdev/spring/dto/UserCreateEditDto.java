@@ -2,6 +2,7 @@ package com.dmdev.spring.dto;
 
 import com.dmdev.spring.database.entity.Role;
 import com.dmdev.spring.validation.UserInfo;
+import com.dmdev.spring.validation.group.CreateAction;
 import com.dmdev.spring.validation.group.UpdateAction;
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;
@@ -21,14 +22,15 @@ public class UserCreateEditDto {
     @Email
     String username;
 
+    @NotBlank(groups = CreateAction.class)
+    String rawPassword;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     LocalDate birthDate;
 
-    @NotBlank(message = "Firstname is required")
     @Size(min = 3, max = 64)
     String firstname;
 
-    @NotBlank(message = "Firstname is required")
     String lastname;
 
     Role role;

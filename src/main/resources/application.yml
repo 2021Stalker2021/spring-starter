@@ -21,6 +21,10 @@ db:
 
 spring.profiles.active: qa
 
+app.common.logging:
+  enabled: true
+  level: INFO
+
 logging:
   level:
    root: INFO
@@ -49,3 +53,23 @@ spring:
       format_sql: true
       hbm2ddl.auto: validate
     open-in-view: false
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 1051257424047-662tld57l0edibsvr3kp9choq7t5psu4.apps.googleusercontent.com
+            clientSecret: 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
+            redirectUri: http://localhost:8080/login/oauth2/code/google
+            scope: openid,email,profile
+  messages:
+    basename: messages
+
+
+springdoc:
+  swagger-ui:
+    oauth:
+      client-id: 1051257424047-662tld57l0edibsvr3kp9choq7t5psu4.apps.googleusercontent.com
+      client-secret: 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
+      scopes: openid,email,profile
+    oauth2-redirect-url: http://localhost:8080/swagger-ui/oauth2-redirect.html
